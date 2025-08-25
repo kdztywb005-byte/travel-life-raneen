@@ -1,0 +1,59 @@
+[25/‏8 9:55 م] Raneen Hosny Ayyad: [
+    {
+        "id": "1",
+        "name": "Eiffel Tower",
+        "description": "The most iconic landmark of Paris, offering stunning views of the city.",
+        "image": "https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=800&q=80",
+        "location": "Champ de Mars, 5 Avenue Anatole France, 75007 Paris, France"
+    },
+    {
+        "id": "2",
+        "name": "Louvre Museum",
+        "description": "World-famous museum housing the Mona Lisa and countless other masterpieces.",
+        "image": "https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=800&q=80",
+        "location": "Rue de Rivoli, 75001 Paris, France"
+    },
+    {
+        "id": "3",
+        "name": "Notre Dame Cathedral",
+        "description": "Historic Gothic cathedral known for its architecture and history.",
+        "image": "https://images.unsplash.com/photo-1522098543979-ffc7f79d9f7c?auto=format&fit=crop&w=800&q=80",
+        "location": "6 Parvis Notre-Dame - Pl. Jean-Paul II, 75004 Paris, France"
+    }
+]
+[25/‏8 9:56 م] Raneen Hosny Ayyad: const express = require('express');
+const fs = require('fs');
+const path = require('path');
+const app = express();
+const PORT = 3001;
+
+// Endpoint to get all places
+app.get('/api/places', (req, res) => {
+    const dataPath = path.join(__dirname, 'data', 'places.json');
+    fs.readFile(dataPath, 'utf8', (err, data) => {
+        if (err) {
+            return res.status(500).json({ error: 'Failed to load places' });
+        }
+        res.json(JSON.parse(data));
+    });
+});
+
+// Endpoint to get place by id
+app.get('/api/places/:id', (req, res) => {
+    const dataPath = path.join(__dirname, 'data', 'places.json');
+    fs.readFile(dataPath, 'utf8', (err, data) => {
+        if (err) {
+            return res.status(500).json({ error: 'Failed to load places' });
+        }
+        const places = JSON.parse(data);
+        const place = places.find(p => p.id === req.params.id);
+        if (!place) {
+            return res.status(404).json({ error: 'Place not found' });
+        }
+        res.json(place);
+    });
+});
+
+app.listen(PORT, () => {
+    console.log(`Server listening on port ${PORT}`);
+});
